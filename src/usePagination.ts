@@ -1,19 +1,19 @@
-import { useCallback, useEffect, useMemo, useRef, useReducer } from "react";
-import { getPaginationMeta, PaginationState, PaginationMeta } from "./getPaginationMeta";
-import { paginationStateReducer } from "./paginationStateReducer";
+import { useCallback, useEffect, useMemo, useReducer, useRef } from "react"
+import { getPaginationMeta, type PaginationMeta, type PaginationState } from "./getPaginationMeta"
+import { paginationStateReducer } from "./paginationStateReducer"
 
 type UsePaginationConfig = {
-    totalItems?: number;
-    initialPage?: number;
-    initialPageSize?: number;
-};
+    totalItems?: number
+    initialPage?: number
+    initialPageSize?: number
+}
 
 type PaginationActions = {
-    setPage: (page: number) => void;
-    setNextPage: () => void;
-    setPreviousPage: () => void;
-    setPageSize: (pageSize: number, nextPage?: number) => void;
-};
+    setPage: (page: number) => void
+    setNextPage: () => void
+    setPreviousPage: () => void
+    setPageSize: (pageSize: number, nextPage?: number) => void
+}
 
 export function usePagination({
     totalItems = 0,
@@ -24,22 +24,22 @@ export function usePagination({
         totalItems,
         pageSize: initialPageSize,
         currentPage: initialPage,
-    };
+    }
 
-    const [paginationState, dispatch] = useReducer(paginationStateReducer, initialState);
+    const [paginationState, dispatch] = useReducer(paginationStateReducer, initialState)
 
-    const totalItemsRef = useRef(totalItems);
-    totalItemsRef.current = totalItems;
+    const totalItemsRef = useRef(totalItems)
+    totalItemsRef.current = totalItems
 
     useEffect(() => {
         return () => {
             if (typeof totalItemsRef.current !== "number" || totalItems === totalItemsRef.current) {
-                return;
+                return
             }
 
-            dispatch({ type: "SET_TOTALITEMS", totalItems: totalItemsRef.current });
-        };
-    }, [totalItems]);
+            dispatch({ type: "SET_TOTALITEMS", totalItems: totalItemsRef.current })
+        }
+    }, [totalItems])
 
     return {
         ...paginationState,
@@ -48,16 +48,16 @@ export function usePagination({
             dispatch({
                 type: "SET_PAGE",
                 page,
-            });
+            })
         }, []),
         setNextPage: useCallback(() => {
-            dispatch({ type: "NEXT_PAGE" });
+            dispatch({ type: "NEXT_PAGE" })
         }, []),
         setPreviousPage: useCallback(() => {
-            dispatch({ type: "PREVIOUS_PAGE" });
+            dispatch({ type: "PREVIOUS_PAGE" })
         }, []),
         setPageSize: useCallback((pageSize: number, nextPage = 0) => {
-            dispatch({ type: "SET_PAGESIZE", pageSize, nextPage });
+            dispatch({ type: "SET_PAGESIZE", pageSize, nextPage })
         }, []),
-    };
+    }
 }

@@ -1,13 +1,13 @@
-import { ReactNode } from "react";
+import type { ReactNode } from "react"
 
-import { usePagination } from "./usePagination";
+import { usePagination } from "./usePagination"
 
 type PaginationProps = {
-    children: (arg0: ReturnType<typeof usePagination>) => ReactNode;
-    totalItems?: number;
-    initialPage?: number;
-    initialPageSize: number;
-};
+    children: (arg0: ReturnType<typeof usePagination>) => ReactNode
+    totalItems?: number
+    initialPage?: number
+    initialPageSize: number
+}
 
 function Pagination({
     children,
@@ -15,9 +15,9 @@ function Pagination({
     initialPage = 0,
     initialPageSize,
 }: PaginationProps) {
-    return children(usePagination({ totalItems, initialPage, initialPageSize }));
+    return children(usePagination({ totalItems, initialPage, initialPageSize }))
 }
 
-Pagination.displayName = "Pagination";
+Pagination.displayName = "Pagination"
 
-export { Pagination };
+export { Pagination }
