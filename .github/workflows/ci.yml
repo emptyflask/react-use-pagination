@@ -1,0 +1,73 @@
+name: CI
+on:
+    push:
+        branches:
+            - master
+    pull_request:
+        branches:
+            - master
+jobs:
+    test:
+        name: Test on Node ${{ matrix.node }} and ${{ matrix.os }}
+        runs-on: ${{ matrix.os }}
+        strategy:
+            matrix:
+                node: [20]
+                os:
+                    - ubuntu-latest
+                    - windows-latest
+                    - macOS-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+
+            - name: Install pnpm
+              uses: pnpm/action-setup@v4
+              with:
+                  run_install: false
+
+            - name: Setup Node
+              uses: actions/setup-node@v4
+              with:
+                  node-version: ${{ matrix.node }}
+                  cache: "pnpm"
+
+            - name: Install npm dependencies
+              run: pnpm i
+              env:
+                  CI: true
+
+            - name: Run tests
+              run: pnpm run test
+
+            - name: Verify build succeeds
+              run: pnpm run prepack
+
+    lint:
+        name: Lint & Typecheck
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+
+            - name: Install pnpm
+              uses: pnpm/action-setup@v4
+              with:
+                  run_install: false
+
+            - name: Setup Node
+              uses: actions/setup-node@v4
+              with:
+                  node-version: 20
+                  cache: "pnpm"
+
+            - name: Install npm dependencies
+              run: pnpm i
+              env:
+                  CI: true
+
+            - name: lint
+              run: pnpm run lint
+
+            - name: typecheck
+              run: pnpm run typecheck
